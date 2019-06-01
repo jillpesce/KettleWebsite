@@ -2,7 +2,36 @@
 <html>
 <head>
 	<title>KettleBot</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+  <style type="text/css">
+    body {
+      background: beige;
+    }
+    .big {
+      font-size: 200%;
+      font-family: fantasy;
+      color: brown;
+    }
+
+
+    .button {
+      background-color: gray;
+      border: thin;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-flex;
+      font-size: 16px;
+    }
+
+    #buttonOn {
+      background-color: #F4A460;
+    }
+
+    #buttonOff {
+      background-color: gray;
+    }
+  </style>
 	<script 
   src="https://code.jquery.com/jquery-3.4.1.min.js"
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -15,24 +44,26 @@
   <audio id="slurp">
     <source src="slurp.mp3" type="audio/mpeg" />
 </audio>
-<center> And that's the <strong class="big">TEA</strong> <img src="leaf.jpg" width="35" height="40" onClick="document.getElementById('slurp').play(); return false;" />
+<center> And that's the <strong class="big">TEA</strong> <img src="https://i.ya-webdesign.com/images/laurel-plant-png.png" width="35" height="40" onClick="document.getElementById('slurp').play(); return false;" />
 </body>
 </br> 
-<img src="tea.jpg" onClick="document.getElementById('poor').play(); return false;" />
-<p id="temp"></p><br/>
+<img src="https://www.picpng.com/uploads/Cup_Tea_PNG_27729.Png" onClick="document.getElementById('poor').play(); return false;" />
 <div class="dollartimes-pb" style="font-family: arial; width: 300px; box-sizing: border-box; clear:both;">
   </center>
   <div class="dollartimes-pb-title" style="font-size:16px; overflow: hidden;">Temperature (°F)</div>
   <div>
-    <div class="dollartimes-pb-frame" title="1000 / 36% towards goal" style="border-radius: 5px; background-color: #ffffff;padding: 0px;border: 1px solid #000; height: 30px; margin: 2px 0 1px;">
-      <div class="dollartimes-pb-fill" style="width:36%; height: 100%; margin-top: 0px; background: repeating-linear-gradient(-45deg, rgba(221,126,107,1), rgba(221,126,107,1) 8px, rgba(221,126,107,0.8) 8px, rgba(221,126,107,0.8) 16px);">&nbsp;</div>
+    <div class="dollartimes-pb-frame" title="76 / 36% towards goal" style="border-radius: 5px; background-color: #ffffff;padding: 0px;border: 1px solid #000; height: 30px; margin: 2px 0 1px;">
+      <div class="dollartimes-pb-fill" style="width:0%; height: 100%; margin-top: 0px; background: repeating-linear-gradient(-45deg, rgba(221,126,107,1), rgba(221,126,107,1) 8px, rgba(221,126,107,0.8) 8px, rgba(221,126,107,0.8) 16px);">&nbsp;
+            <span class="dollartimes-pb-caption" style="float: right; margin-top: 32px; font-size: 12px;" id="currTemp"></span>
+      </div>
     </div>
     <span class="dollartimes-pb-caption" style="float: left; font-size: 12px;">0°</span>
+
     <span class="dollartimes-pb-caption" style="float: right; font-size: 12px;">212°</span>
   </div>
   <div style="clear: both;"></div>
   <div style="margin: 2px 0 0 0; text-align: right;">
-    <a href="http://www.dollartimes.com/on-your-site/progress-bar.htm?name=Temperature&start=0&goal=212&current=76&color=dd7e6b&unit=%C2%B0&unitposition=right&size=300" style="font-size: 10px;text-decoration:none;color:#bbb">Boiling Baby</a>
+    <span style="font-size: 10px;color:#bbb">Boiling Baby</span>
   </div>
 </div>
 <center>
@@ -42,7 +73,7 @@
 
 
 <script type="text/javascript">
-var url = "localhost";
+var url = "http://192.168.1.147";
 $(document).ready(function() {
     $("#buttonOn").click(function(){
         $.post(url+"/on");
@@ -50,10 +81,20 @@ $(document).ready(function() {
     $("#buttonOff").click(function(){
         $.post(url+"/off");
     });
-   	$.get(url+"/state.json", function(data) {
-    	$("#temp").html(data.temp);
-      //data.power can be 0 for off or 1 for on
-   	}, "json");
+    $("#buttonOff").hide();
+   	setInterval(function() {
+      $.get(url+"/state.json", function(data) {
+    	  $(".dollartimes-pb-fill").css("width", (data.temp/980 * 100)+"%");
+        $("#currTemp").html(Math.round((data.temp/980 * 212))+"°");
+        if(data.power) {
+          $("#buttonOff").show();
+          $("#buttonOn").hide();
+        } else {
+          $("#buttonOff").hide();
+          $("#buttonOn").show();
+        }
+   	    }, "json")
+    }, 1000);
 });
 </script>
 
