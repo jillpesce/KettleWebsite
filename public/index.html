@@ -5,6 +5,7 @@
   <style type="text/css">
     body {
       background: beige;
+      font-size: 18pt;
     }
     .big {
       font-size: 200%;
@@ -31,72 +32,85 @@
     #buttonOff {
       background-color: gray;
     }
+
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background-color: brown;
+      font-size: 14pt;
+      text-decoration-color: white;
+    }
   </style>
-	<script 
+  <script 
   src="https://code.jquery.com/jquery-3.4.1.min.js"
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
   crossorigin="anonymous"></script>
 </head>
 <body>
-  <audio id="poor">
-    <source src="poor.mp3" type="audio/mpeg" />
-</audio>
   <audio id="slurp">
-    <source src="slurp.mp3" type="audio/mpeg" />
-</audio>
-<center> And that's the <strong class="big">TEA</strong> <img src="https://i.ya-webdesign.com/images/laurel-plant-png.png" width="35" height="40" onClick="document.getElementById('slurp').play(); return false;" />
-</body>
+    <source src="http://soundbible.com/grab.php?id=1527&type=mp3" type="audio/mpeg" />
+  </audio>
+  <center> And that's the <strong class="big">TEA</strong> <a href="https://www.youtube.com/watch?v=GFfn8L2saYI&feature=youtu.be&t=77" target="_blank"><img src="https://i.ya-webdesign.com/images/laurel-plant-png.png" width="35" height="40" /> </a> 
+  </body>
 </br> 
-<img src="https://www.picpng.com/uploads/Cup_Tea_PNG_27729.Png" onClick="document.getElementById('poor').play(); return false;" />
+<img src="http://www.pngall.com/wp-content/uploads/2016/04/Tea-Transparent.png" onClick="document.getElementById('slurp').play(); return false;" />
 <div class="dollartimes-pb" style="font-family: arial; width: 300px; box-sizing: border-box; clear:both;">
-  </center>
-  <div class="dollartimes-pb-title" style="font-size:16px; overflow: hidden;">Temperature (°F)</div>
-  <div>
-    <div class="dollartimes-pb-frame" title="76 / 36% towards goal" style="border-radius: 5px; background-color: #ffffff;padding: 0px;border: 1px solid #000; height: 30px; margin: 2px 0 1px;">
-      <div class="dollartimes-pb-fill" style="width:0%; height: 100%; margin-top: 0px; background: repeating-linear-gradient(-45deg, rgba(221,126,107,1), rgba(221,126,107,1) 8px, rgba(221,126,107,0.8) 8px, rgba(221,126,107,0.8) 16px);">&nbsp;
-            <span class="dollartimes-pb-caption" style="float: right; margin-top: 32px; font-size: 12px;" id="currTemp"></span>
-      </div>
+</center>
+<div class="dollartimes-pb-title" style="font-size:16px; overflow: hidden;">Temperature (°F)</div>
+<div>
+  <div class="dollartimes-pb-frame" title="76 / 36% towards goal" style="border-radius: 5px; background-color: #ffffff;padding: 0px;border: 1px solid #000; height: 30px; margin: 2px 0 1px;">
+    <div class="dollartimes-pb-fill" style="width:0%; height: 100%; margin-top: 0px; background: repeating-linear-gradient(-45deg, rgba(221,126,107,1), rgba(221,126,107,1) 8px, rgba(221,126,107,0.8) 8px, rgba(221,126,107,0.8) 16px);">&nbsp;
+      <span class="dollartimes-pb-caption" style="float: right; margin-top: 32px; font-size: 12px;" id="currTemp"></span>
     </div>
-    <span class="dollartimes-pb-caption" style="float: left; font-size: 12px;">0°</span>
+  </div>
+  <span class="dollartimes-pb-caption" style="float: left; font-size: 12px;">0°</span>
 
-    <span class="dollartimes-pb-caption" style="float: right; font-size: 12px;">212°</span>
-  </div>
-  <div style="clear: both;"></div>
-  <div style="margin: 2px 0 0 0; text-align: right;">
-    <span style="font-size: 10px;color:#bbb">Boiling Baby</span>
-  </div>
+  <span class="dollartimes-pb-caption" style="float: right; font-size: 12px;"></span>
+</div>
+<div style="clear: both;"></div>
+<div style="margin: 2px 0 0 0; text-align: right;">
+  <span style="font-size: 10px;color:#bbb">Boiling Baby</span>
+</div>
 </div>
 <center>
-<button  class="button" id="buttonOn">On</button>
-<button class="button" id="buttonOff">Off</button>
+  <button  class="button" id="buttonOn">On</button>
+  <button class="button" id="buttonOff">Off</button>
 
 
-
-<script type="text/javascript">
-var url = "http://192.168.1.147";
-$(document).ready(function() {
-    $("#buttonOn").click(function(){
+  <script type="text/javascript">
+    var url = "http://192.168.1.147";
+    $(document).ready(function() {
+      $("#buttonOn").click(function(){
         $.post(url+"/on");
-    }); 
-    $("#buttonOff").click(function(){
+      }); 
+      $("#buttonOff").click(function(){
         $.post(url+"/off");
-    });
-    $("#buttonOff").hide();
-   	setInterval(function() {
-      $.get(url+"/state.json", function(data) {
-    	  $(".dollartimes-pb-fill").css("width", (data.temp/980 * 100)+"%");
-        $("#currTemp").html(Math.round((data.temp/980 * 212))+"°");
-        if(data.power) {
+      });
+      $("#buttonOff").hide();
+      setInterval(function() {
+        $.get(url+"/state.json", function(data) {
+         $(".dollartimes-pb-fill").css("width", (data.temp/980 * 100)+"%");
+         $("#currTemp").html(Math.round((data.temp/980 * 212))+"°");
+         if(data.power) {
           $("#buttonOff").show();
           $("#buttonOn").hide();
         } else {
           $("#buttonOff").hide();
           $("#buttonOn").show();
         }
-   	    }, "json")
-    }, 1000);
-});
-</script>
+      }, "json")
+      }, 1000);
+    });
+  </script>
 
 </body>
+<footer>
+    Created & Designed by Nick and Jill Pesce
+    <br>
+    Contact information: <a href="mailto:jillpesce44@gmail.com">
+    jillpesce44@gmail.com</a>.
+    <br>
+    2019
+</footer>
 </html>
