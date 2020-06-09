@@ -1,3 +1,3 @@
 # KettleWebsite
 
-Turns Arduino-implanted electric kettle on and off. 
+Website to turn Arduino-implanted electric kettle on and off and provide temperature readings. 
